@@ -235,17 +235,23 @@ dolineprefix(const char *begin, const char *end, int newblock) {
 
 int
 dolink(const char *begin, const char *end, int newblock) {
-	int img, len, sep;
+	int t, len, sep, offset;
 	const char *desc, *link, *p, *q, *descend, *linkend;
 	const char *title = NULL, *titleend = NULL;
 
+	offset = 0 ;
 	if(*begin == '[')
-		img = 0;
-	else if(strncmp(begin, "![", 2) == 0)
-		img = 1;
-	else
-		return 0;
-	p = desc = begin + 1 + img;
+		t = 0 ;
+	else{
+		++offset;
+		if(!strncmp(begin, "![", 2))
+			t = 1 ;
+		else if(!strncmp(begin, "#[", 2))
+			t = 2 ;
+		else
+			return 0;
+	}
+	p = desc = begin + 1 + offset ;
 	if(!(p = strstr(desc, "](")) || p > end)
 		return 0;
 	for(q = strstr(desc, "!["); q && q < end && q < p; q = strstr(q + 1, "!["))
@@ -269,7 +275,7 @@ dolink(const char *begin, const char *end, int newblock) {
 		linkend = q;
 		len = q + 1 - begin;
 	}
-	if(img) {
+	if(t == 1) {
 		fputs("<img src=\"", stdout);
 		hprint(link, linkend);
 		fputs("\" alt=\"", stdout);
@@ -281,8 +287,20 @@ dolink(const char *begin, const char *end, int newblock) {
 			fputs("\" ", stdout);
 		}
 		fputs("/>", stdout);
-	}
-	else {
+	} else if(t == 2) {
+		fputs("<video autoplay=\"\" controls=\"\" src=\"", stdout);
+		hprint(link, linkend);
+		fputs("\" alt=\"", stdout);
+		hprint(desc, descend);
+		fputs("\"", stdout);
+		if(title && titleend){
+			fputs("title=\"", stdout);
+			hprint(title, titleend);
+			fputs("\" ", stdout);
+		}
+		fputs(">", stdout);
+		fputs("</video>", stdout);
+	} else {
 		fputs("<a href=\"", stdout);
 		hprint(link, linkend);
 		fputs("\"", stdout);

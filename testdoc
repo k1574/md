@@ -72,6 +72,8 @@ image with title: ![alt text](http://st.suckless.org/screenshots/20h-2012-s.png 
 
 image with title (single quote): ![alt text](http://st.suckless.org/screenshots/20h-2012-s.png 'screenshot of st')
 
+video: #[alt text](http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4)
+
 inline html
 -----------
 
