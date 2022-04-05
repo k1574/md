@@ -288,7 +288,7 @@ dolink(const char *begin, const char *end, int newblock) {
 		}
 		fputs("/>", stdout);
 	} else if(t == 2) {
-		fputs("<video autoplay=\"\" controls=\"\" src=\"", stdout);
+		fputs("<video controls=\"\" src=\"", stdout);
 		hprint(link, linkend);
 		fputs("\" alt=\"", stdout);
 		hprint(desc, descend);
